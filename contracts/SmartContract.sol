@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/contracts/utils/math/SafeMath.sol";
-import "./Allowance";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "./Allowance.sol";
 
 contract SharedWallet is Ownable, Allowance {
     event MoneySent(address indexed _beneficiary, uint256 _amount);
