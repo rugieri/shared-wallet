@@ -40,7 +40,7 @@ contract Allowance is Ownable {
         allowance[_who] = allowance[_who].sub(_amount);
     }
 
-    function renounceOwnership() public override onlyOwner {
+    function renounceOwnership() public view override onlyOwner {
         revert("can't renounceOwnership here"); //not possible with this smart contract
     }
 }

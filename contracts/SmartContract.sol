@@ -17,14 +17,19 @@ contract SharedWallet is Ownable, Allowance {
             _amount <= address(this).balance,
             "Contract doesn't own enough money"
         );
-        if (!isOwner()) {
+        if (msg.sender != owner()) {
             reduceAllowance(msg.sender, _amount);
         }
         emit MoneySent(_to, _amount);
         _to.transfer(_amount);
     }
 
-    function renounceOwnership() public override onlyOnwer {
+    function renounceOwnership()
+        public
+        view
+        override(Allowance, Ownable)
+        onlyOwner
+    {
         revert("can't renounceOwnership here"); //not possible with this smart contract
     }
 
