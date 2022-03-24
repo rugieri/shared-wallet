@@ -2,21 +2,8 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-
-contract Allowance is Ownable {
-    event AllowanceChanged(
-        address indexed _forWho,
-        address indexed _byWhom,
-        uint256 _oldAmount,
-        uint256 _newAmount
-    );
-    mapping(address => uint256) public allowance;
-
-    function setAllowance(address _who, uint256 _amount) public onlyOwner {
-        emit AllowanceChanged(_who, msg.sender, allowance[_who], _amount);
-        allowance[_who] = _amount;
-    }
-}
+import "@openzeppelin/contracts/contracts/utils/math/SafeMath.sol";
+import "./Allowance";
 
 contract SharedWallet is Ownable, Allowance {
     event MoneySent(address indexed _beneficiary, uint256 _amount);
@@ -30,11 +17,15 @@ contract SharedWallet is Ownable, Allowance {
             _amount <= address(this).balance,
             "Contract doesn't own enough money"
         );
-        if (msg.sender != owner()) {
+        if (!isOwner()) {
             reduceAllowance(msg.sender, _amount);
         }
         emit MoneySent(_to, _amount);
         _to.transfer(_amount);
+    }
+
+    function renounceOwnership() public override onlyOnwer {
+        revert("can't renounceOwnership here"); //not possible with this smart contract
     }
 
     receive() external payable {
